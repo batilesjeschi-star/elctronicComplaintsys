@@ -1,0 +1,47 @@
+<?php
+/**
+ * TEMPLATE FOR: htdocs/index.php  (after the folder restructure described
+ * in INFINITYFREE-DEPLOYMENT.md step 4)
+ *
+ * This is Laravel's normal public/index.php, with the require paths
+ * updated to point one level up into the "laravel" folder that sits
+ * OUTSIDE htdocs (InfinityFree only serves files that live inside
+ * htdocs, so the actual app code must live next to it, not inside it).
+ *
+ * Folder layout on the server after restructuring:
+ *
+ *   /                              (your account's home directory)
+ *   ├── htdocs/                    (InfinityFree's web root — public)
+ *   │     ├── index.php            (THIS file)
+ *   │     ├── .htaccess
+ *   │     └── storage/             (uploaded images end up here)
+ *   └── laravel/                   (everything else: app, vendor, etc.)
+ *         ├── app/
+ *         ├── bootstrap/
+ *         ├── config/
+ *         ├── database/
+ *         ├── routes/
+ *         ├── storage/
+ *         ├── vendor/
+ *         ├── artisan
+ *         ├── composer.json
+ *         └── .env
+ */
+
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+// Maintenance mode check — path updated to point into ../laravel
+if (file_exists($maintenance = __DIR__.'/../laravel/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+// Composer's autoloader — path updated to point into ../laravel
+require __DIR__.'/../laravel/vendor/autoload.php';
+
+// Bootstrap the Laravel app — path updated to point into ../laravel
+$app = require_once __DIR__.'/../laravel/bootstrap/app.php';
+
+$app->handleRequest(Request::capture());
