@@ -1,0 +1,52 @@
+@extends('layouts.guest')
+
+@section('title', 'Log In')
+
+@section('content')
+    <h1 class="h4 fw-semibold mb-1">Welcome back</h1>
+    <p class="text-muted mb-4">Log in to report a problem or check your complaint status.</p>
+
+    @if (session('status'))
+        <div class="alert alert-success">{{ session('status') }}</div>
+    @endif
+
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" name="email" id="email" value="{{ old('email') }}"
+                   class="form-control @error('email') is-invalid @enderror"
+                   required autofocus autocomplete="username">
+            @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" name="password" id="password"
+                   class="form-control @error('password') is-invalid @enderror"
+                   required autocomplete="current-password">
+            @error('password')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                <label class="form-check-label" for="remember">Remember me</label>
+            </div>
+            @if (Route::has('password.request'))
+                <a class="small" href="{{ route('password.request') }}">Forgot password?</a>
+            @endif
+        </div>
+
+        <button type="submit" class="btn btn-ecs w-100 py-2">Log In</button>
+
+        <p class="text-center text-muted small mt-4 mb-0">
+            Don't have an account? <a href="{{ route('register') }}">Register here</a>
+        </p>
+    </form>
+@endsection
