@@ -1,0 +1,23 @@
+# Alternative: deploy on Render.com using this file (render.com -> New -> Blueprint)
+services:
+  - type: web
+    name: ecs-app
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: FILESYSTEM_DISK
+        value: public
+      - key: DB_CONNECTION
+        value: mysql
+      # DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD, APP_KEY, MAIL_* :
+      # add these in the Render dashboard after connecting a MySQL database
+databases:
+  - name: ecs-db
+    plan: free
